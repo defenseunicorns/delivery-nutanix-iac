@@ -48,10 +48,17 @@ variable "unique_suffix" {
 }
 
 variable "server_count" {
-  description = "The number of server VMs to deploy."
+  description = "The number of server VMs to deploy in addition to the bootstrap VM."
   type        = number
-  default     = 3
+  default     = 2
 }
+
+variable "agent_count" {
+  description = "The number of agent VMs to deploy."
+  type        = number
+  default     = 6
+}
+
 
 variable "instance_memory" {
   description = "The amount of memory for each virtual machine in MiB."
