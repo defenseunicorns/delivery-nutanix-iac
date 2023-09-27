@@ -48,9 +48,9 @@ variable "unique_suffix" {
 }
 
 variable "server_count" {
-  description = "The number of server VMs to deploy in addition to the bootstrap VM."
+  description = "The number of server VMs to deploy."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "agent_count" {
@@ -60,14 +60,36 @@ variable "agent_count" {
 }
 
 
-variable "instance_memory" {
-  description = "The amount of memory for each virtual machine in MiB."
+variable "server_memory" {
+  description = "The amount of memory for each server VM in MiB."
   type        = number
 }
 
-variable "instance_cpu" {
-  description = "The number of CPUs for each virtual machine."
+variable "server_cpu" {
+  description = "The number of CPUs for each server VM."
   type        = number
+}
+
+variable "server_cpu_cores" {
+  description = "The number of CPU cores, per CPU, for each server VM."
+  type        = number
+  default = 1
+}
+
+variable "agent_memory" {
+  description = "The amount of memory for each agent VM in MiB."
+  type        = number
+}
+
+variable "agent_cpu" {
+  description = "The number of CPUs for each agent VM."
+  type        = number
+}
+
+variable "agent_cpu_cores" {
+  description = "The number of CPU cores, per CPU, for each agent VM."
+  type        = number
+  default = 1
 }
 
 variable "image_name" {
@@ -75,14 +97,26 @@ variable "image_name" {
   type        = string
 }
 
-variable "primary_disk_size" {
-  description = "The size of the primary disk for virtual machines in MiB. Primary disk is the boot disk and contains ephemeral storage."
+variable "server_primary_disk_size" {
+  description = "The size of the primary disk for server VMs in MiB. Primary disk is the boot disk and contains ephemeral storage."
   type        = number
   default     = 150 * 1024
 }
 
-variable "secondary_disk_size" {
-  description = "The size of the secondary disk for virtual machines in MiB. Secondary disk is used for PVC/object storage."
+variable "server_secondary_disk_size" {
+  description = "The size of the secondary disk for server VMs in MiB. Secondary disk is used for PVC/object storage with rook/ceph."
+  type        = number
+  default     = 300 * 1024
+}
+
+variable "agent_primary_disk_size" {
+  description = "The size of the primary disk for agent VMs in MiB. Primary disk is the boot disk and contains ephemeral storage."
+  type        = number
+  default     = 150 * 1024
+}
+
+variable "agent_secondary_disk_size" {
+  description = "The size of the secondary disk for agent VMs in MiB. Secondary disk is used for PVC/object storage with rook/ceph."
   type        = number
   default     = 300 * 1024
 }
