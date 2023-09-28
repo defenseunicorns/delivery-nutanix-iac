@@ -1,11 +1,3 @@
-resource "random_string" "uid" {
-  length  = 3
-  special = false
-  lower   = true
-  upper   = false
-  numeric = true
-}
-
 data "nutanix_cluster" "cluster" {
   name = var.nutanix_cluster
 }
