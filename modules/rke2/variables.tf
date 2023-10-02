@@ -35,10 +35,22 @@ variable "nutanix_subnet" {
   type        = string
 }
 
+variable "server_ip_list" {
+  description = "The list of IPs for server nodes. List must be >= server_count."
+  type        = list(string)
+  default     = []
+}
+
+variable "server_dns_name" {
+  description = "The DNS name to use for the server/controlplane. Should route round robin to all IPs under server_ip_list."
+  type        = string
+  default     = ""
+}
+
 variable "name" {
   description = "Name to use for VMs and other resources."
   type        = string
-  default     = "rke2-server"
+  default     = "rke2"
 }
 
 variable "unique_suffix" {
@@ -73,7 +85,7 @@ variable "server_cpu" {
 variable "server_cpu_cores" {
   description = "The number of CPU cores, per CPU, for each server VM."
   type        = number
-  default = 1
+  default     = 1
 }
 
 variable "agent_memory" {
@@ -89,7 +101,7 @@ variable "agent_cpu" {
 variable "agent_cpu_cores" {
   description = "The number of CPU cores, per CPU, for each agent VM."
   type        = number
-  default = 1
+  default     = 1
 }
 
 variable "image_name" {

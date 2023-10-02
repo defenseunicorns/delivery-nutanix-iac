@@ -55,14 +55,22 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
 
   nic_list {
     subnet_uuid = data.nutanix_subnet.subnet.id
+    dynamic "ip_endpoint_list" {
+      for_each = length(var.server_ip_list) != 0 ? [1] : []
+      content {
+        ip   = var.server_ip_list[0]
+        type = "ASSIGNED"
+      }
+    }
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tpl.yaml", {
     hostname        = "${local.uname}-server-0",
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
-    bootstrap_ip    = "",
-    agent           = ""
+    bootstrap_ip    = var.server_dns_name,
+    agent           = "",
+    tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
   }))
 }
 
@@ -95,6 +103,13 @@ resource "nutanix_virtual_machine" "rke2_servers" {
 
   nic_list {
     subnet_uuid = data.nutanix_subnet.subnet.id
+    dynamic "ip_endpoint_list" {
+      for_each = length(var.server_ip_list) != 0 ? [1] : []
+      content {
+        ip   = var.server_ip_list[count.index + 1]
+        type = "ASSIGNED"
+      }
+    }
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tpl.yaml", {
@@ -103,7 +118,8 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     uname           = local.uname,
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
-    bootstrap_ip    = nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    bootstrap_ip    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent           = ""
   }))
 }
@@ -143,7 +159,8 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     hostname        = "${local.uname}-agent-${count.index}",
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
-    bootstrap_ip    = nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    bootstrap_ip    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent           = "-a"
   }))
 }

@@ -1,5 +1,6 @@
 #cloud-config
-hostname: ${hostname}
+hostname: ${hostname}.local
+prefer_fqdn_over_hostname: false
 users:
   - name: nutanix
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
@@ -17,4 +18,4 @@ runcmd:
     else
       server_ip=${bootstrap_ip}
     fi
-    /root/rke2-startup.sh -t ${token} -s $${server_ip} -u nutanix ${agent}
+    /root/rke2-startup.sh -t ${token} -s $${server_ip} -u nutanix ${agent} ${tls_san}
