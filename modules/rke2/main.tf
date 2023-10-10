@@ -64,7 +64,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     }
   }
 
-  guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tpl.yaml", {
+  guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
     hostname        = "${local.uname}-server-0",
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
@@ -112,7 +112,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     }
   }
 
-  guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tpl.yaml", {
+  guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
     hostname        = "${local.uname}-server-${count.index + 1}",
     count           = count.index,
     uname           = local.uname,
@@ -155,7 +155,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     subnet_uuid = data.nutanix_subnet.subnet.id
   }
 
-  guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tpl.yaml", {
+  guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
     hostname        = "${local.uname}-agent-${count.index}",
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
