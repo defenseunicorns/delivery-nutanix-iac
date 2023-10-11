@@ -17,5 +17,10 @@ runcmd:
       server_ip=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
     else
       server_ip=${bootstrap_ip}
+      # If server node(s) are ready then an unauthenticated request to the kube api should return a 401
+      until [[ $(curl -m 5 --silent -I https://$${server_ip}:6443 -k | head -n 1|cut -d$' ' -f2) == 401 ]]; do
+        echo "Waiting for cluster to be available."
+        sleep 5
+      done
     fi
     /root/rke2-startup.sh -t ${token} -s $${server_ip} -u nutanix ${agent} ${tls_san}
