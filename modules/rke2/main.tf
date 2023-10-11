@@ -68,7 +68,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     hostname        = "${local.uname}-server-0",
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
-    bootstrap_ip    = var.server_dns_name,
+    bootstrap_ip    = "",
     agent           = "",
     tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
   }))
