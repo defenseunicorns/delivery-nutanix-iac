@@ -1,6 +1,6 @@
 # RKE2 Module
 
-This module depends on a Nutanix cluster already being configured with a subnet as well as an image being available that was built by the uds-package-builder.
+This module depends on a Nutanix cluster already being configured with a subnet as well as an image being available that was built by the [uds-rke2-image-builder](https://github.com/defenseunicorns/uds-rke2-image-builder). Images built by that repo contain all needed RKE2 dependencies and the rke2 startup script that this module expects to be available that handles configuring, starting, and joining RKE2 nodes.
 
 An example set of variables passed to the module looks something like this:
 ```
