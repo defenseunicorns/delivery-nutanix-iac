@@ -1,0 +1,26 @@
+#cloud-config
+hostname: ${hostname}.local
+prefer_fqdn_over_hostname: false
+users:
+  - name: nutanix
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    shell: /bin/bash
+    ssh_authorized_keys:
+    %{ for key in authorized_keys ~}
+    - ${key}
+    %{ endfor ~}
+ssh_pwauth: False
+runcmd:
+  - |
+    # If no bootstrap IP is provided then start RKE2 as single node/bootstrap
+    if [ -z ${bootstrap_ip} ]; then
+      server_ip=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+    else
+      server_ip=${bootstrap_ip}
+      # If server node(s) are ready then an unauthenticated request to the kube api should return a 401
+      until [[ $(curl -m 5 --silent -I https://$${server_ip}:6443 -k | head -n 1|cut -d$' ' -f2) == 401 ]]; do
+        echo "Waiting for cluster to be available."
+        sleep 5
+      done
+    fi
+    /root/rke2-startup.sh -t ${token} -s $${server_ip} -u nutanix ${agent} ${tls_san}
