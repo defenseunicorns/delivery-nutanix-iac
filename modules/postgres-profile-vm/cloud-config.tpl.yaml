@@ -36,5 +36,6 @@ runcmd:
     sed -E -i 's/local(\s+)all(\s+)all(\s+)peer/local\1all\2all\3trust/' /var/lib/pgsql/14/data/pg_hba.conf
     sed -E -i 's/local(\s+)replication(\s+)all(\s+)peer/local\1replication\2all\3scram-sha-256/' /var/lib/pgsql/14/data/pg_hba.conf
     echo "host all all 0.0.0.0/0 scram-sha-256" | sudo tee -a /var/lib/pgsql/14/data/pg_hba.conf
+    echo "listen_addresses = '*'" | sudo tee -a /var/lib/pgsql/14/data/postgresql.conf
     sudo systemctl start era_postgres
     psql -U postgres -c "ALTER USER postgres PASSWORD '${pg_password}'"
