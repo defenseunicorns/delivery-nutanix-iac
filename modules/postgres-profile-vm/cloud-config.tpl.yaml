@@ -27,11 +27,11 @@ runcmd:
     sudo mkdir -p /var/lib/pgsql/${postgres_version}/data/
     # Copy postgres default service to the location that NDB writes the era_postgres service. This ensures it is overwritten by NDB VMs which avoids multiple PG services running at once
     sudo cp /usr/lib/systemd/system/postgresql-${postgres_version}.service /etc/systemd/system/era_postgres.service
+    # Ensure postgres user owns data dir
+    sudo chown -R postgres:postgres /var/lib/pgsql/
     # Init and start PG service
     sudo /usr/pgsql-${postgres_version}/bin/postgresql-${postgres_version}-setup initdb
     sudo systemctl enable era_postgres
-    # Ensure postgres user owns data dir
-    sudo chown -R postgres:postgres /var/lib/pgsql/
     # Update pg_hba.conf to match what NDB uses
     sed -E -i 's/local(\s+)all(\s+)all(\s+)peer/local\1all\2all\3trust/' /var/lib/pgsql/14/data/pg_hba.conf
     sed -E -i 's/local(\s+)replication(\s+)all(\s+)peer/local\1replication\2all\3scram-sha-256/' /var/lib/pgsql/14/data/pg_hba.conf
