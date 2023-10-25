@@ -39,3 +39,4 @@ runcmd:
     echo "listen_addresses = '*'" | sudo tee -a /var/lib/pgsql/14/data/postgresql.conf
     sudo systemctl start era_postgres
     psql -U postgres -c "ALTER USER postgres PASSWORD '${pg_password}'"
+    sudo firewall-cmd --zone=public --permanent --add-service=postgresql
