@@ -5,6 +5,7 @@ users:
   - name: era
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     passwd: ${user_password}
+    ssh_pwauth: True
     shell: /bin/bash
     ssh_authorized_keys:
     %{ for key in authorized_keys ~}
