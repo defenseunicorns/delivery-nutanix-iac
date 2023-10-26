@@ -3,15 +3,17 @@ hostname: ${hostname}.local
 prefer_fqdn_over_hostname: false
 users:
   - name: era
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
     passwd: ${user_password}
-    ssh_pwauth: True
     shell: /bin/bash
+    lock-passwd: false
+    ssh_pwauth: True
+    chpasswd: { expire: False }
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh_authorized_keys:
     %{ for key in authorized_keys ~}
     - ${key}
     %{ endfor ~}
-ssh_pwauth: True
+
 runcmd:
   - |
     sudo pvcreate /dev/sdb
