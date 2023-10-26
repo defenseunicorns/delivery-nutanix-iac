@@ -41,3 +41,4 @@ runcmd:
     psql -U postgres -c "ALTER USER postgres PASSWORD '${pg_password}'"
     sudo firewall-offline-cmd --zone=public --add-service=postgresql
     sudo firewall-offline-cmd --zone=public --permanent --add-service=postgresql
+    sudo systemctl restart firewalld
