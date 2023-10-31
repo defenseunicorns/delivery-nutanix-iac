@@ -28,8 +28,9 @@ variable "sla_name" {
 #Database settings
 
 variable "database_name" {
-  description = "Name to use for postgres DB created during provisioning. Also used as a prefix for the postgres instance, VM, and time machine names."
+  description = "Name to use for postgres DB created during provisioning."
   type        = string
+  default     = "postgres"
 }
 
 variable "db_password" {
@@ -44,8 +45,13 @@ variable "database_size" {
 
 # VM settings
 
+variable "instance_name" {
+  description = "Name used as a prefix for the postgres instance, VM, and time machine names."
+  type        = string
+}
+
 variable "unique_suffix" {
-  description = "Whether to add a unique suffix to the database_name for the VM, postgres instance, and time machine names. Not added to the database."
+  description = "Whether to add a unique suffix to the instance_name for the VM, postgres instance, and time machine names. Not added to the database_name."
   type        = bool
   default     = true
 }

@@ -1,5 +1,5 @@
 locals {
-  uname = var.unique_suffix ? lower("${var.database_name}-${random_string.uid.result}") : lower(var.database_name)
+  uname = var.unique_suffix ? lower("${var.instance_name}-${random_string.uid.result}") : lower(var.instance_name)
 }
 
 resource "random_string" "uid" {
