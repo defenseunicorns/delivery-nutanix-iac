@@ -72,6 +72,6 @@ variable "pg_password" {
 
 variable "postgres_version" {
   description = "Major version of postgres."
-  type = string
-  default = "14"
+  type        = string
+  default     = "14"
 }
