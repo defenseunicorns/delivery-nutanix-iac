@@ -110,3 +110,9 @@ variable "ssh_authorized_keys" {
   description = "A list of authorized public SSH keys to allow for login to the nutanix user on all nodes"
   type        = list(string)
 }
+
+variable "node_user" {
+  description = "The username to use for the default user on cluster node hosts."
+  type        = string
+  default     = "nutanix"
+}

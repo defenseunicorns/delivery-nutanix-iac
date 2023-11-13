@@ -71,9 +71,3 @@ variable "vm_password" {
   type        = string
   default     = null
 }
-
-
-
-
-
-
