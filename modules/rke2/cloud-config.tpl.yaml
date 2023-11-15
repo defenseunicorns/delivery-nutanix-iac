@@ -2,7 +2,7 @@
 hostname: ${hostname}.local
 prefer_fqdn_over_hostname: false
 users:
-  - name: nutanix
+  - name: ${node_user}
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     shell: /bin/bash
     ssh_authorized_keys:
@@ -23,4 +23,4 @@ runcmd:
         sleep 5
       done
     fi
-    /root/rke2-startup.sh -t ${token} -s $${server_ip} -u nutanix ${agent} ${tls_san}
+    /root/rke2-startup.sh -t ${token} -s $${server_ip} -u ${node_user} ${agent} ${tls_san}
