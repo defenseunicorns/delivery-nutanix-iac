@@ -69,7 +69,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     node_user       = var.node_user,
     authorized_keys = var.ssh_authorized_keys,
     token           = random_password.token.result,
-    bootstrap_ip    = "",
+    connect_hostname    = "",
     agent           = "",
     tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
   }))
@@ -120,7 +120,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     authorized_keys = var.ssh_authorized_keys,
     node_user       = var.node_user,
     token           = random_password.token.result,
-    bootstrap_ip    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    connect_hostname    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent           = ""
   }))
@@ -162,7 +162,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     authorized_keys = var.ssh_authorized_keys,
     node_user       = var.node_user,
     token           = random_password.token.result,
-    bootstrap_ip    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    connect_hostname    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent           = "-a"
   }))
