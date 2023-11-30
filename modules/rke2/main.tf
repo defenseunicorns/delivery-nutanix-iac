@@ -65,13 +65,13 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
-    hostname        = "${local.uname}-server-0",
-    node_user       = var.node_user,
-    authorized_keys = var.ssh_authorized_keys,
-    token           = random_password.token.result,
-    bootstrap_ip    = "",
-    agent           = "",
-    tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
+    hostname         = "${local.uname}-server-0",
+    node_user        = var.node_user,
+    authorized_keys  = var.ssh_authorized_keys,
+    token            = random_password.token.result,
+    connect_hostname = "",
+    agent            = "",
+    tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
   }))
 }
 
@@ -114,15 +114,15 @@ resource "nutanix_virtual_machine" "rke2_servers" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
-    hostname        = "${local.uname}-server-${count.index + 1}",
-    count           = count.index,
-    uname           = local.uname,
-    authorized_keys = var.ssh_authorized_keys,
-    node_user       = var.node_user,
-    token           = random_password.token.result,
-    bootstrap_ip    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
-    tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
-    agent           = ""
+    hostname         = "${local.uname}-server-${count.index + 1}",
+    count            = count.index,
+    uname            = local.uname,
+    authorized_keys  = var.ssh_authorized_keys,
+    node_user        = var.node_user,
+    token            = random_password.token.result,
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
+    agent            = ""
   }))
 }
 
@@ -158,12 +158,12 @@ resource "nutanix_virtual_machine" "rke2_agents" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
-    hostname        = "${local.uname}-agent-${count.index}",
-    authorized_keys = var.ssh_authorized_keys,
-    node_user       = var.node_user,
-    token           = random_password.token.result,
-    bootstrap_ip    = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
-    tls_san         = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
-    agent           = "-a"
+    hostname         = "${local.uname}-agent-${count.index}",
+    authorized_keys  = var.ssh_authorized_keys,
+    node_user        = var.node_user,
+    token            = random_password.token.result,
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
+    agent            = "-a"
   }))
 }
