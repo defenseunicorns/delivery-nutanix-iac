@@ -41,6 +41,7 @@ No modules.
 | <a name="input_agent_secondary_disk_size"></a> [agent\_secondary\_disk\_size](#input\_agent\_secondary\_disk\_size) | The size of the secondary disk for agent VMs in MiB. Secondary disk is used for PVC/object storage with rook/ceph. | `number` | `307200` | no |
 | <a name="input_image_name"></a> [image\_name](#input\_image\_name) | The name of the image to use for virtual machines. | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name to use for VMs and other resources. | `string` | `"rke2"` | no |
+| <a name="input_node_user"></a> [node\_user](#input\_node\_user) | The username to use for the default user on cluster node hosts. | `string` | `"nutanix"` | no |
 | <a name="input_nutanix_cluster"></a> [nutanix\_cluster](#input\_nutanix\_cluster) | The name of the Nutanix cluster to deploy to. | `string` | n/a | yes |
 | <a name="input_nutanix_subnet"></a> [nutanix\_subnet](#input\_nutanix\_subnet) | The name of the subnet to deploy VMs to. | `string` | n/a | yes |
 | <a name="input_server_count"></a> [server\_count](#input\_server\_count) | The number of server VMs to deploy. | `number` | `3` | no |
