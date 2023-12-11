@@ -64,7 +64,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     hostname         = "${local.uname}-server-0",
     node_user        = var.node_user,
     authorized_keys  = var.ssh_authorized_keys,
-    token            = random_password.token.result,
+    token            = var.join_token,
     connect_hostname = "",
     agent            = "",
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
@@ -115,7 +115,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     uname            = local.uname,
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
-    token            = random_password.token.result,
+    token            = var.join_token,
     connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = ""
@@ -157,7 +157,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     hostname         = "${local.uname}-agent-${count.index}",
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
-    token            = random_password.token.result,
+    token            = var.join_token,
     connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "-a"
