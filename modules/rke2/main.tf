@@ -103,7 +103,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     dynamic "ip_endpoint_list" {
       for_each = length(var.server_ip_list) != 0 ? [1] : []
       content {
-        ip   = var.server_ip_list[count.index + 1]
+        ip   = var.bootstrap_cluster ? var.server_ip_list[count.index + 1] :  var.server_ip_list[count.index]
         type = "ASSIGNED"
       }
     }
