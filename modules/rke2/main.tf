@@ -10,11 +10,6 @@ resource "random_string" "uid" {
   numeric = true
 }
 
-resource "random_password" "token" {
-  length  = 40
-  special = false
-}
-
 data "nutanix_cluster" "cluster" {
   name = var.nutanix_cluster
 }
@@ -28,6 +23,7 @@ data "nutanix_image" "image" {
 }
 
 resource "nutanix_virtual_machine" "rke2_bootstrap" {
+  count = var.bootstrap_cluster ? 1 : 0
   name         = "${local.uname}-server-0"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
@@ -76,7 +72,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
 }
 
 resource "nutanix_virtual_machine" "rke2_servers" {
-  count        = var.server_count - 1 // Subtract one from the user provided var to account for the bootstrap node
+  count = var.bootstrap_cluster ? var.server_count - 1 : var.server_count // Subtract one from the user provided var to account for the bootstrap node
   name         = "${local.uname}-server-${count.index + 1}"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
@@ -120,7 +116,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
     token            = random_password.token.result,
-    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = ""
   }))
@@ -162,7 +158,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
     token            = random_password.token.result,
-    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "-a"
   }))
