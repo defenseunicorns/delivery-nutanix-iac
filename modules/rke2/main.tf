@@ -73,7 +73,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
 
 resource "nutanix_virtual_machine" "rke2_servers" {
   count = var.bootstrap_cluster ? var.server_count - 1 : var.server_count // Subtract one from the user provided var to account for the bootstrap node
-  name         = "${local.uname}-server-${count.index + 1}"
+  name         = var.bootstrap_cluster ? "${local.uname}-server-${count.index + 1}" : "${local.uname}-server-${count.index}"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
   memory_size_mib      = var.server_memory
@@ -110,7 +110,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
-    hostname         = "${local.uname}-server-${count.index + 1}",
+    hostname         = var.bootstrap_cluster ? "${local.uname}-server-${count.index + 1}" : "${local.uname}-server-${count.index}",
     count            = count.index,
     uname            = local.uname,
     authorized_keys  = var.ssh_authorized_keys,
