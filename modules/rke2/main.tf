@@ -23,7 +23,7 @@ data "nutanix_image" "image" {
 }
 
 resource "nutanix_virtual_machine" "rke2_bootstrap" {
-  count = var.bootstrap_cluster ? 1 : 0
+  count        = var.bootstrap_cluster ? 1 : 0
   name         = "${local.uname}-server-0"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
@@ -72,7 +72,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
 }
 
 resource "nutanix_virtual_machine" "rke2_servers" {
-  count = var.bootstrap_cluster ? var.server_count - 1 : var.server_count // Subtract one from the user provided var to account for the bootstrap node
+  count        = var.bootstrap_cluster ? var.server_count - 1 : var.server_count // Subtract one from the user provided var to account for the bootstrap node
   name         = var.bootstrap_cluster ? "${local.uname}-server-${count.index + 1}" : "${local.uname}-server-${count.index}"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
@@ -103,7 +103,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     dynamic "ip_endpoint_list" {
       for_each = length(var.server_ip_list) != 0 ? [1] : []
       content {
-        ip   = var.bootstrap_cluster ? var.server_ip_list[count.index + 1] :  var.server_ip_list[count.index]
+        ip   = var.bootstrap_cluster ? var.server_ip_list[count.index + 1] : var.server_ip_list[count.index]
         type = "ASSIGNED"
       }
     }
