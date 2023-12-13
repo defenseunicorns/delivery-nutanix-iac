@@ -91,34 +91,34 @@ resource "nutanix_ndb_database" "postgres-db" {
     slaid       = data.nutanix_ndb_sla.sla.id
 
     schedule {
-      snapshottimeofday{
-                hours= 1
-                minutes= 0
-                seconds= 0
-            }
-            continuousschedule{
-                enabled=true
-                logbackupinterval= 30
-                snapshotsperday=1
-            }
-            weeklyschedule{
-                enabled=true
-                dayofweek= "MONDAY"
-            }
-            monthlyschedule{
-                enabled = true
-                dayofmonth= 1
-            }
-            quartelyschedule{
-                enabled=true
-                startmonth="JANUARY"
-                dayofmonth= 1
-            }
-            yearlyschedule{
-                enabled= false
-                dayofmonth= 1
-                month="DECEMBER"
-            }
+      snapshottimeofday {
+        hours = 1
+        minutes = 0
+        seconds = 0
+      }
+      continuousschedule {
+        enabled           = true
+        logbackupinterval = 30
+        snapshotsperday   = 1
+      }
+      weeklyschedule {
+        enabled   = true
+        dayofweek = "MONDAY"
+      }
+      monthlyschedule {
+        enabled    = true
+        dayofmonth = 1
+      }
+      quartelyschedule {
+        enabled    = true
+        startmonth = "JANUARY"
+        dayofmonth = 1
+      }
+      yearlyschedule {
+        enabled    = false
+        dayofmonth = 1
+        month      = "DECEMBER"
+      }
     }
   }
 }
