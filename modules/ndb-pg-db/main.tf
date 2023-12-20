@@ -92,7 +92,7 @@ resource "nutanix_ndb_database" "postgres-db" {
 
     schedule {
       snapshottimeofday {
-        hours = 1
+        hours   = 1
         minutes = 0
         seconds = 0
       }

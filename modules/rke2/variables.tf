@@ -15,7 +15,7 @@ variable "server_ip_list" {
 }
 
 variable "server_dns_name" {
-  description = "The DNS name to use for the server/controlplane. Should route round robin to all IPs under server_ip_list."
+  description = "The DNS name to use for the server/controlplane. Should route round robin to all IPs under server_ip_list. Required if bootstrap_cluster is set to false."
   type        = string
   default     = ""
 }
@@ -43,7 +43,6 @@ variable "agent_count" {
   type        = number
   default     = 6
 }
-
 
 variable "server_memory" {
   description = "The amount of memory for each server VM in MiB."
@@ -115,4 +114,14 @@ variable "node_user" {
   description = "The username to use for the default user on cluster node hosts."
   type        = string
   default     = "nutanix"
+}
+
+variable "join_token" {
+  description = "Secret used for a node to join the cluster."
+  type        = string
+}
+
+variable "bootstrap_cluster" {
+  description = "Should module bootstrap a new cluster, or should nodes join an existing cluster? If this is false, then server_dns_name must be set for nodes to join a cluster."
+  type        = bool
 }

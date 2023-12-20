@@ -10,11 +10,6 @@ resource "random_string" "uid" {
   numeric = true
 }
 
-resource "random_password" "token" {
-  length  = 40
-  special = false
-}
-
 data "nutanix_cluster" "cluster" {
   name = var.nutanix_cluster
 }
@@ -28,6 +23,7 @@ data "nutanix_image" "image" {
 }
 
 resource "nutanix_virtual_machine" "rke2_bootstrap" {
+  count        = var.bootstrap_cluster ? 1 : 0
   name         = "${local.uname}-server-0"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
@@ -68,7 +64,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     hostname         = "${local.uname}-server-0",
     node_user        = var.node_user,
     authorized_keys  = var.ssh_authorized_keys,
-    token            = random_password.token.result,
+    token            = var.join_token,
     connect_hostname = "",
     agent            = "",
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
@@ -76,8 +72,8 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
 }
 
 resource "nutanix_virtual_machine" "rke2_servers" {
-  count        = var.server_count - 1 // Subtract one from the user provided var to account for the bootstrap node
-  name         = "${local.uname}-server-${count.index + 1}"
+  count        = var.bootstrap_cluster ? var.server_count - 1 : var.server_count // Subtract one from the user provided var to account for the bootstrap node
+  name         = var.bootstrap_cluster ? "${local.uname}-server-${count.index + 1}" : "${local.uname}-server-${count.index}"
   cluster_uuid = data.nutanix_cluster.cluster.id
 
   memory_size_mib      = var.server_memory
@@ -107,20 +103,20 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     dynamic "ip_endpoint_list" {
       for_each = length(var.server_ip_list) != 0 ? [1] : []
       content {
-        ip   = var.server_ip_list[count.index + 1]
+        ip   = var.bootstrap_cluster ? var.server_ip_list[count.index + 1] : var.server_ip_list[count.index]
         type = "ASSIGNED"
       }
     }
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
-    hostname         = "${local.uname}-server-${count.index + 1}",
+    hostname         = var.bootstrap_cluster ? "${local.uname}-server-${count.index + 1}" : "${local.uname}-server-${count.index}",
     count            = count.index,
     uname            = local.uname,
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
-    token            = random_password.token.result,
-    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    token            = var.join_token,
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = ""
   }))
@@ -161,8 +157,8 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     hostname         = "${local.uname}-agent-${count.index}",
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
-    token            = random_password.token.result,
-    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap.nic_list_status.0.ip_endpoint_list[0]["ip"],
+    token            = var.join_token,
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "-a"
   }))
