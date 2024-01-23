@@ -23,4 +23,10 @@ runcmd:
         sleep 5
       done
     fi
+    if [ "${taint_servers}" == "true" ]; then
+      tee -a $config_file <<EOF >/dev/null
+    node-taint:
+      - node-role.kubernetes.io/control-plane=:NoSchedule
+    EOF
+    fi
     /root/rke2-startup.sh -t ${token} -s $${server_ip} ${agent} ${tls_san}

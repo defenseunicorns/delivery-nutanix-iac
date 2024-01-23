@@ -131,3 +131,9 @@ variable "bootstrap_cluster" {
   description = "Should module bootstrap a new cluster, or should nodes join an existing cluster? If this is false, then server_dns_name must be set for nodes to join a cluster."
   type        = bool
 }
+
+variable "taint_servers" {
+  description = "Should taints be applied to server nodes to prevent workloads from scheduling on them?"
+  type        = bool
+  default     = true
+}
