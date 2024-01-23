@@ -32,6 +32,12 @@ variable "unique_suffix" {
   default     = true
 }
 
+variable "boot_type" {
+  description = "Boot type for cluster VMs. Valid options are UEFI, LEGACY, or SECURE_BOOT. UEFI is preferred."
+  type        = string
+  default     = "UEFI"
+}
+
 variable "server_count" {
   description = "The number of server VMs to deploy."
   type        = number

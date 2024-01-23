@@ -31,6 +31,8 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
   num_sockets          = var.server_cpu
   num_vcpus_per_socket = var.server_cpu_cores
 
+  boot_type = var.boot_type
+
   disk_list {
     data_source_reference = {
       kind = "image"
@@ -79,6 +81,8 @@ resource "nutanix_virtual_machine" "rke2_servers" {
   memory_size_mib      = var.server_memory
   num_sockets          = var.server_cpu
   num_vcpus_per_socket = var.server_cpu_cores
+
+  boot_type = var.boot_type
 
   disk_list {
     data_source_reference = {
@@ -130,6 +134,8 @@ resource "nutanix_virtual_machine" "rke2_agents" {
   memory_size_mib      = var.agent_memory
   num_sockets          = var.agent_cpu
   num_vcpus_per_socket = var.agent_cpu_cores
+
+  boot_type = var.boot_type
 
   disk_list {
     data_source_reference = {
