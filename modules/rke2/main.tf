@@ -31,6 +31,8 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
   num_sockets          = var.server_cpu
   num_vcpus_per_socket = var.server_cpu_cores
 
+  boot_type = var.boot_type
+
   disk_list {
     data_source_reference = {
       kind = "image"
@@ -66,8 +68,9 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     authorized_keys  = var.ssh_authorized_keys,
     token            = var.join_token,
     connect_hostname = "",
-    agent            = "",
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
+    agent            = "",
+    taint_servers    = var.taint_servers
   }))
 }
 
@@ -79,6 +82,8 @@ resource "nutanix_virtual_machine" "rke2_servers" {
   memory_size_mib      = var.server_memory
   num_sockets          = var.server_cpu
   num_vcpus_per_socket = var.server_cpu_cores
+
+  boot_type = var.boot_type
 
   disk_list {
     data_source_reference = {
@@ -118,7 +123,8 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     token            = var.join_token,
     connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
-    agent            = ""
+    agent            = "",
+    taint_servers    = var.taint_servers
   }))
 }
 
@@ -130,6 +136,8 @@ resource "nutanix_virtual_machine" "rke2_agents" {
   memory_size_mib      = var.agent_memory
   num_sockets          = var.agent_cpu
   num_vcpus_per_socket = var.agent_cpu_cores
+
+  boot_type = var.boot_type
 
   disk_list {
     data_source_reference = {
@@ -160,6 +168,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     token            = var.join_token,
     connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
-    agent            = "-a"
+    agent            = "-a",
+    taint_servers    = false
   }))
 }

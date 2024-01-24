@@ -32,6 +32,12 @@ variable "unique_suffix" {
   default     = true
 }
 
+variable "boot_type" {
+  description = "Boot type for cluster VMs. Valid options are UEFI, LEGACY, or SECURE_BOOT. UEFI is preferred."
+  type        = string
+  default     = "UEFI"
+}
+
 variable "server_count" {
   description = "The number of server VMs to deploy."
   type        = number
@@ -124,4 +130,10 @@ variable "join_token" {
 variable "bootstrap_cluster" {
   description = "Should module bootstrap a new cluster, or should nodes join an existing cluster? If this is false, then server_dns_name must be set for nodes to join a cluster."
   type        = bool
+}
+
+variable "taint_servers" {
+  description = "Should taints be applied to server nodes to prevent workloads from scheduling on them?"
+  type        = bool
+  default     = true
 }
