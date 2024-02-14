@@ -64,6 +64,8 @@ resource "nutanix_ndb_database" "postgres-db" {
 
     database_names = var.database_name
 
+    auth_method = "scram-sha-256"
+
     post_create_script = "sudo touch /.autorelabel"
   }
 
