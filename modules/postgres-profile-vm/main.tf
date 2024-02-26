@@ -29,6 +29,7 @@ resource "nutanix_virtual_machine" "postgres_profile_vm" {
   memory_size_mib      = var.memory
   num_sockets          = var.cpu
   num_vcpus_per_socket = var.cpu_cores
+  boot_type            = "UEFI"
 
   disk_list {
     data_source_reference = {
