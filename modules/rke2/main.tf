@@ -47,9 +47,6 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     }
     disk_size_mib = var.server_primary_disk_size
   }
-  disk_list {
-    disk_size_mib = var.server_secondary_disk_size
-  }
 
   nic_list {
     subnet_uuid = data.nutanix_subnet.subnet.id
@@ -98,9 +95,6 @@ resource "nutanix_virtual_machine" "rke2_servers" {
       device_type = "DISK"
     }
     disk_size_mib = var.server_primary_disk_size
-  }
-  disk_list {
-    disk_size_mib = var.server_secondary_disk_size
   }
 
   nic_list {
@@ -152,9 +146,6 @@ resource "nutanix_virtual_machine" "rke2_agents" {
       device_type = "DISK"
     }
     disk_size_mib = var.agent_primary_disk_size
-  }
-  disk_list {
-    disk_size_mib = var.agent_secondary_disk_size
   }
 
   nic_list {
