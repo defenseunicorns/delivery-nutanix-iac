@@ -30,7 +30,7 @@ runcmd:
     EOF
     fi
     # If an NTP server address is passed in then overwrite chrony.conf with settings needed for using custom NTP server
-    if [ "${ntp_server}"]; then
+    if [ "${ntp_server}" ]; then
       # copy default chrony.conf into a new file as a reference
       cp /etc/chrony.conf /etc/chrony.defaultconf
       # Grab server IP and use it to find the subnet that the server is on
