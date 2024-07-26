@@ -4,12 +4,12 @@ resource "nutanix_ndb_profile" "tuned_postgres_profile" {
   engine_type = "postgres_database"
   database_parameter_profile {
     postgres_database {
-    max_connections       = "200"
-    random_page_cost = "1.1"
-    min_wal_size = "1GB"
-    max_wal_size = "4GB"
-    effective_io_concurrency = "200"
-    checkpoint_completion_target = "0.9"
+      max_connections              = "200"
+      random_page_cost             = "1.1"
+      min_wal_size                 = "1GB"
+      max_wal_size                 = "4GB"
+      effective_io_concurrency     = "200"
+      checkpoint_completion_target = "0.9"
     }
   }
   published = true
