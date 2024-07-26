@@ -61,5 +61,7 @@ runcmd:
     # Get TAI-UTC offset and leap seconds from the system tz database.
     leapsectz right/UTC
     EOF
+    # Restart chronyd service to ensure config change is active
+    systemctl restart chronyd
     fi
     /root/rke2-startup.sh -t ${token} -s $${server_ip} ${agent} ${tls_san}
