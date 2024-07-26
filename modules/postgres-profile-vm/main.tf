@@ -59,5 +59,6 @@ resource "nutanix_virtual_machine" "postgres_profile_vm" {
     user_password    = var.user_password,
     pg_password      = var.pg_password,
     postgres_version = var.postgres_version
+    ntp_server       = var.ntp_server
   }))
 }

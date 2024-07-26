@@ -75,3 +75,9 @@ variable "postgres_version" {
   type        = string
   default     = "14"
 }
+
+variable "ntp_server" {
+  description = "IP or hostname of NTP server to use for host"
+  type        = string
+  default     = ""
+}

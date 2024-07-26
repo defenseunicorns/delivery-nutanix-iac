@@ -125,3 +125,9 @@ variable "taint_servers" {
   type        = bool
   default     = true
 }
+
+variable "ntp_server" {
+  description = "IP or hostname of NTP server to use for host"
+  type        = string
+  default     = ""
+}

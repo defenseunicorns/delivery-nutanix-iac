@@ -68,6 +68,7 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "",
     taint_servers    = var.taint_servers
+    ntp_server       = var.ntp_server
   }))
 }
 
@@ -119,6 +120,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "",
     taint_servers    = var.taint_servers
+    ntp_server       = var.ntp_server
   }))
 }
 
@@ -161,5 +163,6 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "-a",
     taint_servers    = false
+    ntp_server       = var.ntp_server
   }))
 }
