@@ -126,6 +126,18 @@ variable "taint_servers" {
   default     = true
 }
 
+variable "server_custom_taints" {
+  description = "A list of custom taints to be applied to server nodes"
+  type        = list(string)
+  default     = []
+}
+
+variable "agent_custom_taints" {
+  description = "A list of custom taints to be applied to agent nodes"
+  type        = list(string)
+  default     = []
+}
+
 variable "ntp_server" {
   description = "IP or hostname of NTP server to use for host"
   type        = string
