@@ -21,6 +21,8 @@ resource "random_password" "example_token" {
   special = false
 }
 
+# This example shows how you would create a cluster with 3 server nodes and 6 agent nodes, 3 of which have no taints for regular workloads, and 3 of which have taints to prevent scheduling so they are reserved for running gitaly
+
 # Deploy cluster without custom taints
 module "example-cluster" {
   source = "../modules/rke2"
