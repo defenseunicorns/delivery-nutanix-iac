@@ -138,6 +138,18 @@ variable "agent_custom_taints" {
   default     = []
 }
 
+variable "server_labels" {
+  description = "A list of custom labels to be applied to server nodes"
+  type        = list(string)
+  default     = []
+}
+
+variable "agent_labels" {
+  description = "A list of custom labels to be applied to agent nodes"
+  type        = list(string)
+  default     = []
+}
+
 variable "ntp_server" {
   description = "IP or hostname of NTP server to use for host"
   type        = string

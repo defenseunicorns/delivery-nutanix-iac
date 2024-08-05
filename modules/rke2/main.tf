@@ -69,7 +69,8 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     agent            = "",
     taint_servers    = var.taint_servers,
     ntp_server       = var.ntp_server,
-    custom_taints    = var.server_custom_taints
+    custom_taints    = var.server_custom_taints,
+    node_labels      = var.server_labels
   }))
 }
 
@@ -122,7 +123,8 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     agent            = "",
     taint_servers    = var.taint_servers,
     ntp_server       = var.ntp_server,
-    custom_taints    = var.server_custom_taints
+    custom_taints    = var.server_custom_taints,
+    node_labels      = var.server_labels
   }))
 }
 
@@ -166,6 +168,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     agent            = "-a",
     taint_servers    = false,
     ntp_server       = var.ntp_server,
-    custom_taints    = var.agent_custom_taints
+    custom_taints    = var.agent_custom_taints,
+    node_labels      = var.agent_labels
   }))
 }

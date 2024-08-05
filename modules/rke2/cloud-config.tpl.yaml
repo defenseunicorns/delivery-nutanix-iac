@@ -42,6 +42,19 @@ runcmd:
     EOT
     done
     fi
+    labels="${join(" ", node_labels)}"
+    if [ "$${labels}" ]; then
+      if ! grep -q node-label "/etc/rancher/rke2/config.yaml"; then
+        tee -a /etc/rancher/rke2/config.yaml <<EOF >/dev/null
+    node-label:
+    EOF
+      fi
+      for label in $${labels}; do
+      tee -a /etc/rancher/rke2/config.yaml <<EOT >/dev/null
+      - $${label}
+    EOT
+    done
+    fi
     # If an NTP server address is passed in then overwrite chrony.conf with settings needed for using custom NTP server
     if [ "${ntp_server}" ]; then
       # copy default chrony.conf into a new file as a reference
