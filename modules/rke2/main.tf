@@ -67,8 +67,10 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     connect_hostname = "",
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "",
-    taint_servers    = var.taint_servers
-    ntp_server       = var.ntp_server
+    taint_servers    = var.taint_servers,
+    ntp_server       = var.ntp_server,
+    custom_taints    = var.server_custom_taints,
+    node_labels      = var.server_labels
   }))
 }
 
@@ -119,8 +121,10 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "",
-    taint_servers    = var.taint_servers
-    ntp_server       = var.ntp_server
+    taint_servers    = var.taint_servers,
+    ntp_server       = var.ntp_server,
+    custom_taints    = var.server_custom_taints,
+    node_labels      = var.server_labels
   }))
 }
 
@@ -162,7 +166,9 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "-a",
-    taint_servers    = false
-    ntp_server       = var.ntp_server
+    taint_servers    = false,
+    ntp_server       = var.ntp_server,
+    custom_taints    = var.agent_custom_taints,
+    node_labels      = var.agent_labels
   }))
 }
