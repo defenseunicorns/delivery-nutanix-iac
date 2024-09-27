@@ -2,13 +2,15 @@
 
 This module depends on a Nutanix cluster already being configured with a subnet as well as an image being available that was built by the [eks-anywhere-image-builder-cli](https://anywhere.eks.amazonaws.com/docs/osmgmt/artifacts/). It also depends on an eks-management cluster already being configured which is where the module will create eksd-cluster resources. Instructions for creating an eks-management cluster in Nutanix can be followed [here](https://anywhere.eks.amazonaws.com/docs/getting-started/nutanix/nutanix-getstarted/).
 
+If deploying in an airgap, it also requires an eks-d registry mirror to be configured. Instructions for downloading the registry artifacts and mirroring them into your airgapped registry can be found [here](https://anywhere.eks.amazonaws.com/docs/getting-started/airgapped/).
+
 An example set of variables passed to the module looks something like this:
 ```
   cluster_name = "example"
   control_plane_cert_sans = ["kube-example.your.hostname", "10.0.200.40"] # 10.0.200.40 used for example, but can be any static IP available for the control plane to use
   control_plane_host = "10.0.200.40"
   kube_version = "1.29"
-  registry_mirror_host = "registry.mirror.host.address"
+  registry_mirror_host = "registry.mirror.host.address" # If deploying in an airgap, this variable is the host for your eks-d registry mirror
   registry_mirror_insecure = true
   prism_central_endpoint = "prism.central.host.address"
   prism_central_insecure = true
