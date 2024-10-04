@@ -1,4 +1,9 @@
 resource "kubernetes_manifest" "cluster" {
+  computed_fields = ["metadata.generation", "metadata.annotations", "metadata.labels"]
+  field_manager {
+    force_conflicts = true
+  }
+
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
     "kind" = "Cluster"
@@ -32,6 +37,9 @@ resource "kubernetes_manifest" "cluster" {
           "kind" = "KubeletConfiguration"
           "rotateCertificates" = true
           "serverTLSBootstrap" = true
+          "tlsCipherSuites" = [
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ]
         }
         "machineGroupRef" = {
           "kind" = "NutanixMachineConfig"
@@ -72,6 +80,9 @@ resource "kubernetes_manifest" "cluster" {
             "kind" = "KubeletConfiguration"
             "rotateCertificates" = true
             "serverTLSBootstrap" = true
+            "tlsCipherSuites" = [
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ]
           }
           "machineGroupRef" = {
             "kind" = "NutanixMachineConfig"
@@ -85,6 +96,9 @@ resource "kubernetes_manifest" "cluster" {
             "kind" = "KubeletConfiguration"
             "rotateCertificates" = true
             "serverTLSBootstrap" = true
+            "tlsCipherSuites" = [
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ]
           }
           "machineGroupRef" = {
             "kind" = "NutanixMachineConfig"
