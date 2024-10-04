@@ -22,6 +22,7 @@ No modules.
 | [kubernetes_manifest.cluster](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.nutanixdatacenterconfig](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.nutanixmachineconfig_compute](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
+| [kubernetes_manifest.nutanixmachineconfig_control_plane](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.nutanixmachineconfig_etcd](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [kubernetes_manifest.nutanixmachineconfig_gitaly](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 
@@ -50,6 +51,7 @@ No modules.
 | <a name="input_gitaly_system_disk_size"></a> [gitaly\_system\_disk\_size](#input\_gitaly\_system\_disk\_size) | Amount of storage to configure for each dedicated gitaly node host disk. | `string` | `"40Gi"` | no |
 | <a name="input_kube_version"></a> [kube\_version](#input\_kube\_version) | What version of kubernetes to deploy. The version chosen must be included in the name of the node\_image being used. Example 1.29 | `string` | n/a | yes |
 | <a name="input_management_cluster_name"></a> [management\_cluster\_name](#input\_management\_cluster\_name) | Name of the eks-d management cluster that has eka-anywhere configured and is used to manage workload clusters. Default is based on example management cluster from eks-anywhere docs. | `string` | `"mgmt"` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | The namespace to create eks anywhere resources in the management cluster. | `string` | `"default"` | no |
 | <a name="input_node_image_name"></a> [node\_image\_name](#input\_node\_image\_name) | The name of the eks node image to use to create eks-d node VMs. Must include the kube\_version in the name. Example eks-rhel-node-image-1.29 | `string` | n/a | yes |
 | <a name="input_node_os_family"></a> [node\_os\_family](#input\_node\_os\_family) | OS family used by node image. Valid options are redhat or ubuntu for Nutanix. | `string` | `"redhat"` | no |
 | <a name="input_node_ssh_keys"></a> [node\_ssh\_keys](#input\_node\_ssh\_keys) | List of SSH keys to allow eksa user to access the VMs deployed for all cluster nodes. | `list(string)` | n/a | yes |
@@ -58,8 +60,8 @@ No modules.
 | <a name="input_prism_central_endpoint"></a> [prism\_central\_endpoint](#input\_prism\_central\_endpoint) | IP or hostname of Prism Central. | `string` | n/a | yes |
 | <a name="input_prism_central_insecure"></a> [prism\_central\_insecure](#input\_prism\_central\_insecure) | If TLS verification for the prism central endpoint should be disabled. | `bool` | `false` | no |
 | <a name="input_prism_central_port"></a> [prism\_central\_port](#input\_prism\_central\_port) | The port used to connect to Prism Central. | `string` | `"9440"` | no |
-| <a name="input_registry_mirror_ca_cert"></a> [registry\_mirror\_ca\_cert](#input\_registry\_mirror\_ca\_cert) | CA cert used to sign the cert served by the eks-d registry mirror. If this isn't provided, then registry\_mirror\_insecure must be set to true. | `string` | `""` | no |
-| <a name="input_registry_mirror_host"></a> [registry\_mirror\_host](#input\_registry\_mirror\_host) | The hostname/IP of the eks-d registry mirror to use for an airgap cluster installation. | `string` | `""` | no |
+| <a name="input_registry_mirror_ca_cert"></a> [registry\_mirror\_ca\_cert](#input\_registry\_mirror\_ca\_cert) | CA cert used to sign the cert served by the eks-d registry mirror. If this isn't provided, then registry\_mirror\_insecure must be set to true. | `string` | `null` | no |
+| <a name="input_registry_mirror_host"></a> [registry\_mirror\_host](#input\_registry\_mirror\_host) | The hostname/IP of the eks-d registry mirror to use for an airgap cluster installation. | `string` | `null` | no |
 | <a name="input_registry_mirror_insecure"></a> [registry\_mirror\_insecure](#input\_registry\_mirror\_insecure) | Set to true if TLS verification should be skipped for the registry mirror. | `bool` | `false` | no |
 | <a name="input_registry_mirror_port"></a> [registry\_mirror\_port](#input\_registry\_mirror\_port) | The port used by the registry mirror to serve eks-d images. | `string` | `"5000"` | no |
 
