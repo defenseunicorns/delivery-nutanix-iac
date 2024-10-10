@@ -57,7 +57,13 @@ variable "registry_mirror_host" {
 variable "registry_mirror_insecure" {
   description = "Set to true if TLS verification should be skipped for the registry mirror."
   type        = bool
-  default     = false
+  default     = null
+}
+
+variable "registry_mirror_authenticate" {
+  description = "Set to true if registry mirror requires authentication. Credentials used for creating the management cluster will automatically be configured for workload clusters."
+  type        = bool
+  default     = null
 }
 
 variable "registry_mirror_port" {

@@ -71,6 +71,7 @@ resource "kubernetes_manifest" "cluster" {
         "caCertContent" = var.registry_mirror_ca_cert
         "endpoint" = var.registry_mirror_host
         "insecureSkipVerify" = var.registry_mirror_insecure
+        "authenticate" = var.registry_mirror_authenticate
         "port" = var.registry_mirror_port
       }
       "workerNodeGroupConfigurations" = [
