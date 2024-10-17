@@ -1,3 +1,6 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 locals {
   uname = var.unique_suffix ? lower("${var.name}-${random_string.uid.result}") : lower(var.name)
 }

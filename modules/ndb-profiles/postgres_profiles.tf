@@ -1,3 +1,6 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 resource "nutanix_ndb_profile" "tuned_postgres_profile" {
   name        = "tuned_postgres_profile"
   description = "Postgres profile with settings tuned slightly from NDB default profile. This is limited to settings exposed by NDB. Additional tuning may need done after the DB has been created."
