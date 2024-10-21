@@ -1,3 +1,6 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 resource "kubernetes_manifest" "cluster" {
   computed_fields = ["metadata.generation", "metadata.annotations", "metadata.labels"]
   field_manager {

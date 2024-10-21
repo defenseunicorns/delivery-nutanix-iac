@@ -1,3 +1,6 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
 # Only needed if an external registry already exists to host an eks-d registry mirror. Will be added to docker insecure-registries for bootstrapping the management cluster
 variable "registry_mirror_host" {
   description = "The hostname/IP of the eks-d registry mirror to use for an airgap cluster installation."
