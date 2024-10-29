@@ -18,7 +18,7 @@ runs:
 
     - name: Tofu Format
       id: fmt
-      run: tofu fmt
+      run: tofu fmt -recursive
       shell: bash
       working-directory: './${{ inputs.target }}/'
       continue-on-error: true
