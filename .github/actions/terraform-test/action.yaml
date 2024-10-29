@@ -1,0 +1,20 @@
+name: Terraform Validate
+description: Runs a test on the terraform
+
+inputs:
+  target:
+    description: Target directory
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Tofu Format
+      uses: ./.github/actions/tofu-format
+      with:
+        target: ${{ inputs.target }}
+
+    - name: Tofu Scanning
+      uses: ./.github/actions/tofu-scan
+      with:
+        target: ${{ inputs.target }}
