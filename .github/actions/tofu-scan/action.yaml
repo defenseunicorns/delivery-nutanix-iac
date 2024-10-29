@@ -1,0 +1,30 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
+name: Tofu Scan
+description: Scan using common checks in Tofu
+
+inputs:
+  target:
+    description: Target directory
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: terraform-linters/setup-tflint@19a52fbac37dacb22a09518e4ef6ee234f2d4987 # v4.0.0
+      name: Setup TFLint
+      with:
+        tflint_version: latest
+
+    - name: Init TFLint
+      run: tflint --init
+      shell: bash
+      env:
+        # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Run TFLint
+      run: tflint --recursive -f compact
+      working-directory: './${{ inputs.target }}/'
+      shell: bash

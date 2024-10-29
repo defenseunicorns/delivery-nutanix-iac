@@ -121,7 +121,7 @@ resource "nutanix_virtual_machine" "rke2_servers" {
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
     token            = var.join_token,
-    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status[0].ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "",
     taint_servers    = var.taint_servers,
@@ -166,7 +166,7 @@ resource "nutanix_virtual_machine" "rke2_agents" {
     authorized_keys  = var.ssh_authorized_keys,
     node_user        = var.node_user,
     token            = var.join_token,
-    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status.0.ip_endpoint_list[0]["ip"],
+    connect_hostname = var.server_dns_name != "" ? var.server_dns_name : nutanix_virtual_machine.rke2_bootstrap[0].nic_list_status[0].ip_endpoint_list[0]["ip"],
     tls_san          = var.server_dns_name != "" ? "-T ${var.server_dns_name}" : ""
     agent            = "-a",
     taint_servers    = false,
