@@ -9,9 +9,9 @@ resource "kubernetes_manifest" "cluster" {
 
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
-    "kind" = "Cluster"
+    "kind"       = "Cluster"
     "metadata" = {
-      "name" = var.cluster_name
+      "name"      = var.cluster_name
       "namespace" = var.namespace
     }
     "spec" = {
@@ -32,12 +32,12 @@ resource "kubernetes_manifest" "cluster" {
       }
       "controlPlaneConfiguration" = {
         "certSans" = var.control_plane_cert_sans
-        "count" = var.control_plane_count
+        "count"    = var.control_plane_count
         "endpoint" = {
           "host" = var.control_plane_host
         }
         "kubeletConfiguration" = {
-          "kind" = "KubeletConfiguration"
+          "kind"               = "KubeletConfiguration"
           "rotateCertificates" = true
           "serverTLSBootstrap" = true
           "tlsCipherSuites" = [
@@ -51,7 +51,7 @@ resource "kubernetes_manifest" "cluster" {
         "taints" = [
           {
             "effect" = "NoSchedule"
-            "key" = "node-role.kubernetes.io/control-plane"
+            "key"    = "node-role.kubernetes.io/control-plane"
           },
         ]
       }
@@ -71,21 +71,21 @@ resource "kubernetes_manifest" "cluster" {
         "name" = var.management_cluster_name
       }
       "registryMirrorConfiguration" = {
-        "caCertContent" = var.registry_mirror_ca_cert
-        "endpoint" = var.registry_mirror_host
+        "caCertContent"      = var.registry_mirror_ca_cert
+        "endpoint"           = var.registry_mirror_host
         "insecureSkipVerify" = var.registry_mirror_insecure
-        "port" = var.registry_mirror_port
+        "port"               = var.registry_mirror_port
       }
       "workerNodeGroupConfigurations" = [
         {
           "count" = var.compute_node_count
           "kubeletConfiguration" = {
-            "kind" = "KubeletConfiguration"
+            "kind"               = "KubeletConfiguration"
             "rotateCertificates" = true
             "serverTLSBootstrap" = true
             "tlsCipherSuites" = [
-            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-          ]
+              "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+            ]
           }
           "machineGroupRef" = {
             "kind" = "NutanixMachineConfig"
@@ -96,12 +96,12 @@ resource "kubernetes_manifest" "cluster" {
         {
           "count" = var.gitaly_dedicated_node_count
           "kubeletConfiguration" = {
-            "kind" = "KubeletConfiguration"
+            "kind"               = "KubeletConfiguration"
             "rotateCertificates" = true
             "serverTLSBootstrap" = true
             "tlsCipherSuites" = [
-            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-          ]
+              "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+            ]
           }
           "machineGroupRef" = {
             "kind" = "NutanixMachineConfig"
@@ -111,7 +111,7 @@ resource "kubernetes_manifest" "cluster" {
           "taints" = [
             {
               "effect" = "NoSchedule"
-              "key" = "dedicated-gitaly-node"
+              "key"    = "dedicated-gitaly-node"
             },
           ]
         },
@@ -123,9 +123,9 @@ resource "kubernetes_manifest" "cluster" {
 resource "kubernetes_manifest" "nutanixdatacenterconfig" {
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
-    "kind" = "NutanixDatacenterConfig"
+    "kind"       = "NutanixDatacenterConfig"
     "metadata" = {
-      "name" = var.cluster_name
+      "name"      = var.cluster_name
       "namespace" = var.namespace
     }
     "spec" = {
@@ -135,7 +135,7 @@ resource "kubernetes_manifest" "nutanixdatacenterconfig" {
       }
       "endpoint" = var.prism_central_endpoint
       "insecure" = var.prism_central_insecure
-      "port" = var.prism_central_port
+      "port"     = var.prism_central_port
     }
   }
 }
@@ -143,9 +143,9 @@ resource "kubernetes_manifest" "nutanixdatacenterconfig" {
 resource "kubernetes_manifest" "nutanixmachineconfig_control_plane" {
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
-    "kind" = "NutanixMachineConfig"
+    "kind"       = "NutanixMachineConfig"
     "metadata" = {
-      "name" = "${var.cluster_name}-cp"
+      "name"      = "${var.cluster_name}-cp"
       "namespace" = var.namespace
     }
     "spec" = {
@@ -158,7 +158,7 @@ resource "kubernetes_manifest" "nutanixmachineconfig_control_plane" {
         "type" = "name"
       }
       "memorySize" = var.cp_node_memory
-      "osFamily" = var.node_os_family
+      "osFamily"   = var.node_os_family
       "subnet" = {
         "name" = var.nutanix_subnet_name
         "type" = "name"
@@ -166,11 +166,11 @@ resource "kubernetes_manifest" "nutanixmachineconfig_control_plane" {
       "systemDiskSize" = var.cp_system_disk_size
       "users" = [
         {
-          "name" = "eksa"
+          "name"              = "eksa"
           "sshAuthorizedKeys" = var.node_ssh_keys
         },
       ]
-      "vcpuSockets" = var.cp_node_cpu_count
+      "vcpuSockets"    = var.cp_node_cpu_count
       "vcpusPerSocket" = 1
     }
   }
@@ -179,9 +179,9 @@ resource "kubernetes_manifest" "nutanixmachineconfig_control_plane" {
 resource "kubernetes_manifest" "nutanixmachineconfig_etcd" {
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
-    "kind" = "NutanixMachineConfig"
+    "kind"       = "NutanixMachineConfig"
     "metadata" = {
-      "name" = "${var.cluster_name}-etcd"
+      "name"      = "${var.cluster_name}-etcd"
       "namespace" = var.namespace
     }
     "spec" = {
@@ -194,7 +194,7 @@ resource "kubernetes_manifest" "nutanixmachineconfig_etcd" {
         "type" = "name"
       }
       "memorySize" = var.etcd_node_memory
-      "osFamily" = var.node_os_family
+      "osFamily"   = var.node_os_family
       "subnet" = {
         "name" = var.nutanix_subnet_name
         "type" = "name"
@@ -202,11 +202,11 @@ resource "kubernetes_manifest" "nutanixmachineconfig_etcd" {
       "systemDiskSize" = var.etcd_system_disk_size
       "users" = [
         {
-          "name" = "eksa"
+          "name"              = "eksa"
           "sshAuthorizedKeys" = var.node_ssh_keys
         },
       ]
-      "vcpuSockets" = var.etcd_node_cpu_count
+      "vcpuSockets"    = var.etcd_node_cpu_count
       "vcpusPerSocket" = 1
     }
   }
@@ -215,9 +215,9 @@ resource "kubernetes_manifest" "nutanixmachineconfig_etcd" {
 resource "kubernetes_manifest" "nutanixmachineconfig_compute" {
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
-    "kind" = "NutanixMachineConfig"
+    "kind"       = "NutanixMachineConfig"
     "metadata" = {
-      "name" = "${var.cluster_name}-compute"
+      "name"      = "${var.cluster_name}-compute"
       "namespace" = var.namespace
     }
     "spec" = {
@@ -230,7 +230,7 @@ resource "kubernetes_manifest" "nutanixmachineconfig_compute" {
         "type" = "name"
       }
       "memorySize" = var.compute_node_memory
-      "osFamily" = var.node_os_family
+      "osFamily"   = var.node_os_family
       "subnet" = {
         "name" = var.nutanix_subnet_name
         "type" = "name"
@@ -238,11 +238,11 @@ resource "kubernetes_manifest" "nutanixmachineconfig_compute" {
       "systemDiskSize" = var.compute_system_disk_size
       "users" = [
         {
-          "name" = "eksa"
+          "name"              = "eksa"
           "sshAuthorizedKeys" = var.node_ssh_keys
         },
       ]
-      "vcpuSockets" = var.compute_node_cpu_count
+      "vcpuSockets"    = var.compute_node_cpu_count
       "vcpusPerSocket" = 1
     }
   }
@@ -251,9 +251,9 @@ resource "kubernetes_manifest" "nutanixmachineconfig_compute" {
 resource "kubernetes_manifest" "nutanixmachineconfig_gitaly" {
   manifest = {
     "apiVersion" = "anywhere.eks.amazonaws.com/v1alpha1"
-    "kind" = "NutanixMachineConfig"
+    "kind"       = "NutanixMachineConfig"
     "metadata" = {
-      "name" = "${var.cluster_name}-gitaly"
+      "name"      = "${var.cluster_name}-gitaly"
       "namespace" = var.namespace
     }
     "spec" = {
@@ -266,7 +266,7 @@ resource "kubernetes_manifest" "nutanixmachineconfig_gitaly" {
         "type" = "name"
       }
       "memorySize" = var.gitaly_node_memory
-      "osFamily" = var.node_os_family
+      "osFamily"   = var.node_os_family
       "subnet" = {
         "name" = var.nutanix_subnet_name
         "type" = "name"
@@ -274,11 +274,11 @@ resource "kubernetes_manifest" "nutanixmachineconfig_gitaly" {
       "systemDiskSize" = var.gitaly_system_disk_size
       "users" = [
         {
-          "name" = "eksa"
+          "name"              = "eksa"
           "sshAuthorizedKeys" = var.node_ssh_keys
         },
       ]
-      "vcpuSockets" = var.gitaly_node_cpu_count
+      "vcpuSockets"    = var.gitaly_node_cpu_count
       "vcpusPerSocket" = 1
     }
   }

@@ -25,7 +25,7 @@ variable "gateway_ip" {
 variable "prefix_length" {
   description = "The prefix length of the subnet, ex: 24"
   type        = number
-  default     = null
+  default     = 24
 }
 
 variable "subnet_ip" {

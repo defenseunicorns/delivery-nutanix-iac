@@ -12,7 +12,7 @@ resource "nutanix_subnet" "subnet" {
   vlan_id     = var.vlan_id
   subnet_type = "VLAN"
 
-  prefix_length = 24
+  prefix_length = var.prefix_length
 
   default_gateway_ip = var.gateway_ip
   subnet_ip          = var.subnet_ip
