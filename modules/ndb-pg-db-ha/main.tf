@@ -55,7 +55,7 @@ resource "nutanix_ndb_database" "postgres-db" {
   dbparameterprofileid     = data.nutanix_ndb_profile.db_param_profile.id
 
   clustered = true
-  
+
   nodecount = var.node_count + 1
 
   // postgreSQL Info
@@ -75,11 +75,11 @@ resource "nutanix_ndb_database" "postgres-db" {
     # cluster_database = true
 
     ha_instance {
-      cluster_name = "${local.uname}-cluster"
+      cluster_name         = "${local.uname}-cluster"
       patroni_cluster_name = "${local.uname}-patroni"
-      proxy_read_port = "5001"
-      proxy_write_port = "5000"
-      deploy_haproxy = var.deploy_haproxy
+      proxy_read_port      = "5001"
+      proxy_write_port     = "5000"
+      deploy_haproxy       = var.deploy_haproxy
       # failover_mode = "Automatic"
     }
   }
@@ -96,8 +96,8 @@ resource "nutanix_ndb_database" "postgres-db" {
     for_each = var.deploy_haproxy ? [1] : []
 
     content {
-        properties {
-        name =  "node_type"
+      properties {
+        name  = "node_type"
         value = "haproxy"
       }
       // name of dbserver vm 
@@ -110,19 +110,19 @@ resource "nutanix_ndb_database" "postgres-db" {
 
   nodes {
     properties {
-      name= "role"
-      value=  "Primary"
+      name  = "role"
+      value = "Primary"
     }
     properties {
-      name= "failover_mode"
-      value=  "Automatic"
+      name  = "failover_mode"
+      value = "Automatic"
     }
     properties {
-      name= "node_type"
-      value=  "database"
+      name  = "node_type"
+      value = "database"
     }
 
-    vmname = "${local.uname}-vm-0"
+    vmname           = "${local.uname}-vm-0"
     networkprofileid = data.nutanix_ndb_profile.network_profile.id
   }
 
@@ -132,16 +132,16 @@ resource "nutanix_ndb_database" "postgres-db" {
 
     content {
       properties {
-        name= "role"
-        value=  "Secondary"
+        name  = "role"
+        value = "Secondary"
       }
       properties {
-        name= "failover_mode"
-        value=  "Automatic"
+        name  = "failover_mode"
+        value = "Automatic"
       }
       properties {
-        name= "node_type"
-        value=  "database"
+        name  = "node_type"
+        value = "database"
       }
       // name of dbserver vm 
       vmname = "${local.uname}-vm-${nodes.key + 1}"
