@@ -47,11 +47,13 @@ runcmd:
     sudo firewall-offline-cmd --zone=public --add-service=postgresql
     sudo firewall-offline-cmd --zone=public --add-port=2379/tcp
     sudo firewall-offline-cmd --zone=public --add-port=2380/tcp
+    sudo firewall-offline-cmd --zone=public --add-port=8679/tcp
     sudo firewall-offline-cmd --zone=public --add-protocol=vrrp
     sudo firewall-offline-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="224.0.0.18" accept'
     sudo firewall-offline-cmd --zone=public --permanent --add-service=postgresql
     sudo firewall-offline-cmd --zone=public --permanent --add-port=2379/tcp
     sudo firewall-offline-cmd --zone=public --permanent --add-port=2380/tcp
+    sudo firewall-offline-cmd --zone=public --permanent --add-port=8679/tcp
     sudo firewall-offline-cmd --zone=public --permanent --add-protocol=vrrp
     sudo firewall-offline-cmd --zone=public --permanent --add-rich-rule='rule family="ipv4" source address="224.0.0.18" accept'
     sudo systemctl restart firewalld
