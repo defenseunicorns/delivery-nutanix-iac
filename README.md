@@ -16,4 +16,4 @@ This repository is a collection of IaC modules for Nutanix. It currently contain
 
 # Deploying an Environment for UDS SWF Bundle
 
-The purpose of these modules is to deploy and manage infrastructure for an environment that the UDS Software Factory Bundle is deployed to. For a detailed list of steps using these modules to deploy all of the prequisite infrastructure see [these docs](./docs/uds-swf-prereqs.md)
+The purpose of these modules is to deploy and manage infrastructure for an environment that the UDS Software Factory Bundle is deployed to. For a detailed list of steps using these modules to deploy all of the prerequisite infrastructure see [these docs](./docs/uds-swf-prereqs.md)
