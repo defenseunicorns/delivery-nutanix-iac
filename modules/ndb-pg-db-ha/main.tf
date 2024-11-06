@@ -70,7 +70,7 @@ resource "nutanix_ndb_database" "postgres-db" {
 
     auth_method = "scram-sha-256"
 
-    post_create_script = "sudo touch /.autorelabel"
+    post_create_script = "sudo /usr/local/bin/relabel_ndb.sh"
 
     # cluster_database = true
 

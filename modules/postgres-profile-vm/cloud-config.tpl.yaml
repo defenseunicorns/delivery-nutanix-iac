@@ -20,6 +20,7 @@ users:
 
 runcmd:
   - |
+    echo 'export PATH=$PATH:/usr/local/pgsql/bin' >> /home/era/.bashrc
     sudo pvcreate /dev/sdb
     sudo pvs
     sudo vgcreate pg_data_vg /dev/sdb
