@@ -57,7 +57,7 @@ resource "nutanix_virtual_machine" "postgres_profile_vm" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("${path.module}/cloud-config.tpl.yaml", {
-    hostname         = "${local.uname}-server-0",
+    hostname         = "${local.uname}",
     authorized_keys  = var.ssh_authorized_keys,
     user_password    = var.user_password,
     pg_password      = var.pg_password,

@@ -1,17 +1,16 @@
+#cloud-config
 # Copyright 2024 Defense Unicorns
 # SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
-
-#cloud-config
 hostname: ${hostname}.local
 prefer_fqdn_over_hostname: false
-ssh_pwauth: True
+ssh_pwauth: true
 users:
   - name: era
     passwd: "${user_password}"
     shell: /bin/bash
     lock_passwd: false
-    ssh_pwauth: True
-    chpasswd: { expire: False }
+    ssh_pwauth: true
+    chpasswd: { expire: false }
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh_authorized_keys:
     %{ for key in authorized_keys ~}
