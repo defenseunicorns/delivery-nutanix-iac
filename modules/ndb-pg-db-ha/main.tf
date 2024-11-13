@@ -57,6 +57,10 @@ resource "nutanix_ndb_database" "postgres-db" {
   networkprofileid         = data.nutanix_ndb_profile.network_profile.id
   dbparameterprofileid     = data.nutanix_ndb_profile.db_param_profile.id
 
+  clustered = true
+
+  nodecount = var.node_count + 1
+
   // postgreSQL Info
   postgresql_info {
     listener_port = "5432"
@@ -70,6 +74,17 @@ resource "nutanix_ndb_database" "postgres-db" {
     auth_method = "scram-sha-256"
 
     post_create_script = "sudo /usr/local/bin/relabel_ndb.sh"
+
+    # cluster_database = true
+
+    ha_instance {
+      cluster_name         = "${local.uname}-cluster"
+      patroni_cluster_name = "${local.uname}-patroni"
+      proxy_read_port      = "5001"
+      proxy_write_port     = "5000"
+      deploy_haproxy       = var.deploy_haproxy
+      # failover_mode = "Automatic"
+    }
   }
 
   // era cluster id
@@ -79,12 +94,64 @@ resource "nutanix_ndb_database" "postgres-db" {
   sshpublickey = var.ssh_authorized_key
 
   // node for single instance
-  nodes {
-    // name of dbserver vm 
-    vmname = "${local.uname}-vm"
 
-    // network profile id
+  dynamic "nodes" {
+    for_each = var.deploy_haproxy ? [1] : []
+
+    content {
+      properties {
+        name  = "node_type"
+        value = "haproxy"
+      }
+      // name of dbserver vm 
+      vmname = "${local.uname}-haproxy-vm"
+
+      // network profile id
+      networkprofileid = data.nutanix_ndb_profile.network_profile.id
+    }
+  }
+
+  nodes {
+    properties {
+      name  = "role"
+      value = "Primary"
+    }
+    properties {
+      name  = "failover_mode"
+      value = "Automatic"
+    }
+    properties {
+      name  = "node_type"
+      value = "database"
+    }
+
+    vmname           = "${local.uname}-vm-0"
     networkprofileid = data.nutanix_ndb_profile.network_profile.id
+  }
+
+
+  dynamic "nodes" {
+    for_each = range(var.node_count - 1)
+
+    content {
+      properties {
+        name  = "role"
+        value = "Secondary"
+      }
+      properties {
+        name  = "failover_mode"
+        value = "Automatic"
+      }
+      properties {
+        name  = "node_type"
+        value = "database"
+      }
+      // name of dbserver vm 
+      vmname = "${local.uname}-vm-${nodes.key + 1}"
+
+      // network profile id
+      networkprofileid = data.nutanix_ndb_profile.network_profile.id
+    }
   }
 
   vm_password = var.vm_password

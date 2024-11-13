@@ -5,6 +5,11 @@ includes:
   - lint: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.1.0/tasks/lint.yaml
 
 tasks:
+  - name: deps
+    description: Install linting tool deps
+    actions:
+      - task: lint:deps
+
   - name: default
     description: Check License
     actions:

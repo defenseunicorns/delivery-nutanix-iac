@@ -1,17 +1,16 @@
+#cloud-config
 # Copyright 2024 Defense Unicorns
 # SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
-
-#cloud-config
 hostname: ${hostname}.local
 prefer_fqdn_over_hostname: false
-ssh_pwauth: True
+ssh_pwauth: true
 users:
   - name: era
     passwd: "${user_password}"
     shell: /bin/bash
     lock_passwd: false
-    ssh_pwauth: True
-    chpasswd: { expire: False }
+    ssh_pwauth: true
+    chpasswd: { expire: false }
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh_authorized_keys:
     %{ for key in authorized_keys ~}
@@ -20,6 +19,7 @@ users:
 
 runcmd:
   - |
+    echo 'export PATH=$PATH:/usr/local/pgsql/bin' >> /home/era/.bashrc
     sudo pvcreate /dev/sdb
     sudo pvs
     sudo vgcreate pg_data_vg /dev/sdb
@@ -31,23 +31,31 @@ runcmd:
     # Mount postgres default data location to second drive. This is required by NDB
     sudo mount /dev/pg_data_vg/pg_data_lv /var/lib/pgsql/
     echo '/dev/pg_data_vg/pg_data_lv  /pgsql/postgres/data  ext4  defaults 0 0' | sudo  tee -a /etc/fstab
-    sudo mkdir -p /var/lib/pgsql/${postgres_version}/data/
-    # Copy postgres default service to the location that NDB writes the era_postgres service. This ensures it is overwritten by NDB VMs which avoids multiple PG services running at once
-    sudo cp /usr/lib/systemd/system/postgresql-${postgres_version}.service /etc/systemd/system/era_postgres.service
+    sudo mkdir -p /var/lib/pgsql/data/
     # Ensure postgres user owns data dir
     sudo chown -R postgres:postgres /var/lib/pgsql/
     # Init and start PG service
-    sudo /usr/pgsql-${postgres_version}/bin/postgresql-${postgres_version}-setup initdb
+    su postgres -c "/usr/local/pgsql/bin/initdb -D /var/lib/pgsql/data"
     sudo systemctl enable era_postgres
     # Update pg_hba.conf to match what NDB uses
-    sed -E -i 's/local(\s+)all(\s+)all(\s+)peer/local\1all\2all\3trust/' /var/lib/pgsql/14/data/pg_hba.conf
-    sed -E -i 's/local(\s+)replication(\s+)all(\s+)peer/local\1replication\2all\3scram-sha-256/' /var/lib/pgsql/14/data/pg_hba.conf
-    echo "host all all 0.0.0.0/0 scram-sha-256" | sudo tee -a /var/lib/pgsql/14/data/pg_hba.conf
-    echo "listen_addresses = '*'" | sudo tee -a /var/lib/pgsql/14/data/postgresql.conf
+    sed -E -i 's/local(\s+)all(\s+)all(\s+)peer/local\1all\2all\3trust/' /var/lib/pgsql/data/pg_hba.conf
+    sed -E -i 's/local(\s+)replication(\s+)all(\s+)peer/local\1replication\2all\3scram-sha-256/' /var/lib/pgsql/data/pg_hba.conf
+    echo "host all all 0.0.0.0/0 scram-sha-256" | tee -a /var/lib/pgsql/data/pg_hba.conf
+    echo "listen_addresses = '*'" | tee -a /var/lib/pgsql/data/postgresql.conf
     sudo systemctl start era_postgres
-    psql -U postgres -c "ALTER USER postgres PASSWORD '${pg_password}'"
+    /usr/local/pgsql/bin/psql -U postgres -c "ALTER USER postgres PASSWORD '${pg_password}'"
     sudo firewall-offline-cmd --zone=public --add-service=postgresql
+    sudo firewall-offline-cmd --zone=public --add-port=2379/tcp
+    sudo firewall-offline-cmd --zone=public --add-port=2380/tcp
+    sudo firewall-offline-cmd --zone=public --add-port=8679/tcp
+    sudo firewall-offline-cmd --zone=public --add-protocol=vrrp
+    sudo firewall-offline-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="224.0.0.18" accept'
     sudo firewall-offline-cmd --zone=public --permanent --add-service=postgresql
+    sudo firewall-offline-cmd --zone=public --permanent --add-port=2379/tcp
+    sudo firewall-offline-cmd --zone=public --permanent --add-port=2380/tcp
+    sudo firewall-offline-cmd --zone=public --permanent --add-port=8679/tcp
+    sudo firewall-offline-cmd --zone=public --permanent --add-protocol=vrrp
+    sudo firewall-offline-cmd --zone=public --permanent --add-rich-rule='rule family="ipv4" source address="224.0.0.18" accept'
     sudo systemctl restart firewalld
     # If an NTP server address is passed in then overwrite chrony.conf with settings needed for using custom NTP server
     if [ "${ntp_server}" ]; then
