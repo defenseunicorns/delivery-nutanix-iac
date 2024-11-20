@@ -96,10 +96,22 @@ variable "server_primary_disk_size" {
   default     = 150 * 1024
 }
 
+variable "server_additional_disk_sizes" {
+  description = "List of disk sizes in MiB, each of which will be used to add an additional disk to RKE2 server VMs."
+  type        = list(number)
+  default     = []
+}
+
 variable "agent_primary_disk_size" {
   description = "The size of the primary disk for agent VMs in MiB. Primary disk is the boot disk and contains ephemeral storage."
   type        = number
   default     = 150 * 1024
+}
+
+variable "agent_additional_disk_sizes" {
+  description = "List of disk sizes in MiB, each of which will be used to add an additional disk to RKE2 agent VMs."
+  type        = list(number)
+  default     = []
 }
 
 variable "ssh_authorized_keys" {

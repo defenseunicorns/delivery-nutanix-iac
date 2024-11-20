@@ -51,6 +51,14 @@ resource "nutanix_virtual_machine" "rke2_bootstrap" {
     disk_size_mib = var.server_primary_disk_size
   }
 
+  dynamic disk_list {
+    for_each = var.server_additional_disk_sizes
+    iterator = next_disk
+    content {
+      disk_size_mib = next_disk.value
+    }
+  }
+
   nic_list {
     subnet_uuid = data.nutanix_subnet.subnet.id
     dynamic "ip_endpoint_list" {
@@ -101,6 +109,14 @@ resource "nutanix_virtual_machine" "rke2_servers" {
       device_type = "DISK"
     }
     disk_size_mib = var.server_primary_disk_size
+  }
+
+  dynamic disk_list {
+    for_each = var.server_additional_disk_sizes
+    iterator = next_disk
+    content {
+      disk_size_mib = next_disk.value
+    }
   }
 
   nic_list {
@@ -155,6 +171,14 @@ resource "nutanix_virtual_machine" "rke2_agents" {
       device_type = "DISK"
     }
     disk_size_mib = var.agent_primary_disk_size
+  }
+
+  dynamic disk_list {
+    for_each = var.agent_additional_disk_sizes
+    iterator = next_disk
+    content {
+      disk_size_mib = next_disk.value
+    }
   }
 
   nic_list {
